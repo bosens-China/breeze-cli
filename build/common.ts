@@ -10,6 +10,8 @@ import fs from 'fs-extra';
 import nunjucks from 'nunjucks';
 import cheerio from 'cheerio';
 import temporary from '../utils/temporary';
+import path from 'path';
+import { stats } from './index';
 
 /**
  * 处理资源文件入口和html文件的入口
@@ -113,6 +115,22 @@ const common = async (configure: Iconfig, isDev: boolean) => {
   config.resolve.alias.set('@', getAbsolutePath('src')).end();
   config.resolve.extensions.clear().add('.js').add('.json').add('.ts');
 
+  // 添加校验
+  config.module
+    .rule('lint')
+    .test(/\.(js|ts)$/)
+    .exclude.add(/node_modules/)
+    .end()
+    .include.add(getAbsolutePath('src'))
+    .end()
+    .use('check')
+    .loader(require.resolve(path.resolve(__dirname, '../loader/checkJS')))
+    .options(configure)
+    .end();
+
+  if (!isDev) {
+    config.stats(stats);
+  }
   return config;
 };
 

@@ -28,7 +28,6 @@ const dev = async (config: Iconfig) => {
     .when(config.lintOnSave, (c) => {
       c.use('eslint-loader').loader(require.resolve('eslint-loader')).options({ catch: true }).end();
     });
-
   return webpackConfig;
 };
 

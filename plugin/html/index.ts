@@ -1,18 +1,17 @@
 import { compilation, Compiler } from 'webpack';
-import { Iconfig } from '../typings';
+import { Iconfig } from '../../typings';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import cheerio from 'cheerio';
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs-extra';
-import { build } from '../utils/build';
+import { build } from '../../utils/build';
 import UglifyJS from 'uglify-js';
 
-import temporary from '../utils/temporary';
-import * as format from '../utils/format';
+import temporary from '../../utils/temporary';
+import * as format from '../../utils/format';
 
-const identification = '__replate__';
-const envStr = `window.process = {env: ${identification}}`;
+import setEnv from './env';
 
 const isCssFile = (file: string) => {
   return file.includes('__css_') && /\.js$/.test(file);
@@ -32,15 +31,10 @@ class Html {
   apply(compiler: Compiler) {
     compiler.hooks.compilation.tap('MyPlugin', (compilation) => {
       HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('MyPlugin', async (data, cb) => {
-        const env = {
-          ...this.config.env.all,
-          ...(this.isDev ? this.config.env.development : this.config.env.production),
-        };
+        // 稍微改写下，因为$没有暴露命空间
+        const $ = cheerio.load(data.html, { decodeEntities: false }) as typeof cheerio;
 
-        const $ = cheerio.load(data.html, { decodeEntities: false });
-        const v = `<script>${envStr.replace(identification, JSON.stringify(env))}</script>`.replace(/\n/g, '');
-        $.root().find('head').append($(v));
-        _.set(data, 'html', $.html());
+        _.set(data, 'html', setEnv($, this.config, this.isDev));
         cb(null, data);
       });
     });
@@ -100,7 +94,7 @@ class Html {
         });
       });
 
-      compiler.plugin('emit', async (compilation: compilation.Compilation, callback) => {
+      compiler.hooks.emit.tapAsync('emit-html', async (compilation, callback) => {
         const keys = _.keys(_.get(compilation, 'assets'));
         keys.forEach((item) => {
           if (isCssFile(item) || isHotFile(item)) {
@@ -111,11 +105,10 @@ class Html {
         await this.format(compilation);
         callback();
       });
-      // 完成和失败的情况下，都要删除生成的临时html文件
-      compiler.plugin('done', async () => {
+      compiler.hooks.done.tap('done-html', async () => {
         await temporary.delete();
       });
-      compiler.plugin('failed', async () => {
+      compiler.hooks.failed.tap('failed-html', async () => {
         await temporary.delete();
       });
     }

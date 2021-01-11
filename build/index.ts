@@ -4,12 +4,43 @@ import _ from 'lodash';
 import dev from './dev';
 import prod from './prod';
 import webpackMerge from 'webpack-merge';
-
+import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 import webpackDevServer from 'webpack-dev-server';
-import webpack from 'webpack';
-
+import webpack, { Stats } from 'webpack';
+import colors from 'colors';
+import temporary from '../utils/temporary';
 import ip from 'ip';
 import { getSequentialPort } from '../utils/serve';
+
+const stats: Stats.ToStringOptionsObject = {
+  warnings: false,
+  colors: true,
+  version: false,
+  usedExports: false,
+  timings: true,
+  publicPath: true,
+  reasons: false,
+  source: false,
+  providedExports: false,
+  performance: false,
+  modules: false,
+  chunks: false,
+  assets: true,
+  builtAt: true,
+  cached: true,
+  cachedAssets: true,
+  children: false,
+  chunkModules: false,
+  chunkOrigins: false,
+  depth: false,
+  hash: false,
+  entrypoints: false,
+};
+
+// 捕获promise错误
+process.on('unhandledRejection', () => {
+  temporary.delete();
+});
 
 /**
  * 设置环境变量，虽然本身插件不适用，但是为了方便拓展一些其他场景
@@ -51,28 +82,54 @@ async function server(config: webpack.Configuration) {
   const devServer: webpackDevServer.Configuration = config.devServer || {};
   devServer.host = devServer.host || '0.0.0.0';
   devServer.port = devServer.port || (await getSequentialPort());
+  // 必须的
+  devServer.quiet = true;
+  devServer.noInfo = true;
+  (devServer as any).progress = true;
   const ipStr = devServer.host === '0.0.0.0' ? 'localhost' : ip.address();
+  // 添加dev输出插件，让界面输出信息更友好
+  const localhost = colors.blue(`  http${devServer.https ? 's' : ''}://${ipStr}:${devServer.port}`);
+  const ipv4str = colors.blue(`  http${devServer.https ? 's' : ''}://${ip.address()}:${devServer.port}`);
+  const messages = `程序运行在:\n\n${localhost}\n${ipv4str}`;
+
+  config.plugins?.push(
+    new FriendlyErrorsWebpackPlugin({
+      compilationSuccessInfo: {
+        messages: [messages],
+        notes: [`运行: ${colors.green('npm run build')} 构建应用\n`],
+      },
+    }),
+  );
+
   webpackDevServer.addDevServerEntrypoints(config, devServer);
   const compiler = webpack(config);
   const server = new webpackDevServer(compiler, devServer);
+  // 屏蔽console
+  const c = Object.keys(console).map((f) => {
+    const value = (console as any)[f];
+    (console as any)[f] = () => {
+      //
+    };
+    return { name: f, value };
+  });
   server.listen(devServer.port, devServer.host, () => {
-    console.log(`运行在: http${devServer.https ? 's' : ''}://${ipStr}:${devServer.port} 上`);
+    // 运行成功后解除屏蔽
+    c.forEach((item) => {
+      (console as any)[item.name] = item.value;
+    });
   });
 }
 async function build(config: webpack.Configuration) {
-  webpack(config, (err, stats) => {
+  webpack(config, async (err, s) => {
     if (err) {
       console.error(err);
+      await temporary.delete();
       return;
     }
 
-    console.log(
-      stats.toString({
-        chunks: false, // 使构建过程更静默无输出
-        colors: true, // 在控制台展示颜色
-      }),
-    );
+    console.log(s.toString(stats));
   });
 }
 
+export { stats };
 export default App;
