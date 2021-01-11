@@ -2,7 +2,7 @@ import Config from 'webpack-chain';
 import { Iconfig } from '../typings';
 import { getAbsolutePath, equalPaths, proGlob, identicalName } from './utils';
 import _ from 'lodash';
-import Html from '../plugin/html';
+import Html from '../plugin/core';
 
 export default async (config: Config, configure: Iconfig, isDev: boolean) => {
   // 搜寻目标public文件
