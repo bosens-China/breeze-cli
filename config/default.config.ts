@@ -8,9 +8,9 @@ const config = (isDev = false): Iconfig => {
     outputDir: 'dist',
     pages: {
       index: {
-        entry: ['src/main.js'],
+        entry: ['src/main'],
         entryView: 'src/App.njk',
-        entryHot: 'src/hot.js',
+        entryHot: 'src/hot',
         entryCss: ['src/assets/css/style.scss'],
         template: 'public/index.html',
         filename: 'index.html',

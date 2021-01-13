@@ -42,7 +42,7 @@ export const proGlob = (): Promise<Array<string>> => {
       if (er) {
         return resolve([]);
       }
-      const arr = (files || []).map((item) => item.replace(/\\/g, '/'));
+      const arr = (files || []).map((f) => path.join(process.cwd(), f));
       publicFile = arr;
       return resolve(arr);
     });

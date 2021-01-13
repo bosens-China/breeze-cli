@@ -4,12 +4,14 @@ import { root, Idata } from './type';
 import UglifyJS from 'uglify-js';
 import postcss from 'postcss';
 import cssnano from 'cssnano';
+import path from 'path';
+import { isFileExists } from '../../utils/fs';
 
 export const isCssFile = (file: string) => {
-  return file.includes('__css_') && /\.js$/.test(file);
+  return file.includes('__css_');
 };
 export const isHotFile = (file: string) => {
-  return file.includes('__hot_') && /\.js$/.test(file);
+  return file.includes('__hot_');
 };
 export const formatCss = (code: string) => {
   return format.css(code);
@@ -48,4 +50,21 @@ export const minifyCss = (css: string) => {
     .then((result) => {
       return result.css;
     });
+};
+
+// 确认文件是否存在，通过对比后缀来判断
+export const getCompleteDocument = async (file: string, arr: Array<string>) => {
+  const name = path.basename(file);
+  if (name.includes('.')) {
+    return file;
+  }
+  for (const item of arr) {
+    const suffix = item.startsWith('.') ? item : `.${item}`;
+    const p = file + suffix;
+    const result = await isFileExists(p);
+    if (result === true) {
+      return p;
+    }
+  }
+  throw new Error(`${file}文件不存在`);
 };

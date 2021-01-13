@@ -37,11 +37,6 @@ const stats: Stats.ToStringOptionsObject = {
   entrypoints: false,
 };
 
-// 捕获promise错误
-process.on('unhandledRejection', () => {
-  temporary.delete();
-});
-
 /**
  * 设置环境变量，虽然本身插件不适用，但是为了方便拓展一些其他场景
  *

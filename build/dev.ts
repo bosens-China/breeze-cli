@@ -2,10 +2,7 @@ import { Iconfig } from '../typings';
 import common from './common';
 import webpack from 'webpack';
 import { getAbsolutePath } from './utils';
-
-const babelConfig = {
-  presets: [['@babel/preset-env', { modules: false, useBuiltIns: 'usage', corejs: 3 }]],
-};
+import path from 'path';
 
 const dev = async (config: Iconfig) => {
   const webpackConfig = await common(config, true);
@@ -13,21 +10,19 @@ const dev = async (config: Iconfig) => {
   webpackConfig.devtool('source-map');
   webpackConfig.plugin('hot').use(webpack.NamedModulesPlugin).use(webpack.HotModuleReplacementPlugin);
   webpackConfig.devServer.hot(true);
-  // 添加babel
+
+  // 添加校验
   webpackConfig.module
-    .rule('js')
+    .rule('lint')
     .test(/\.(js|ts)$/)
     .exclude.add(/node_modules/)
     .end()
     .include.add(getAbsolutePath('src'))
     .end()
-    .use('babel-loader')
-    .loader(require.resolve('babel-loader'))
-    .options(babelConfig)
-    .end()
-    .when(config.lintOnSave, (c) => {
-      c.use('eslint-loader').loader(require.resolve('eslint-loader')).options({ catch: true }).end();
-    });
+    .use('check')
+    .loader(require.resolve(path.resolve(__dirname, '../loader/checkJS')))
+    .options(config)
+    .end();
   return webpackConfig;
 };
 

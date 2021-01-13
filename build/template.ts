@@ -1,10 +1,12 @@
 import Config from 'webpack-chain';
 import { Iconfig } from '../typings';
-import { getAbsolutePath, equalPaths, proGlob, identicalName } from './utils';
+import { getAbsolutePath, equalPaths, proGlob } from './utils';
 import _ from 'lodash';
 import Html from '../plugin/core';
+import path from 'path';
 
 export default async (config: Config, configure: Iconfig, isDev: boolean) => {
+  const root = path.join(process.cwd(), 'public');
   // 搜寻目标public文件
   const allFile = await proGlob();
   const entry = Object.values(configure.pages).map((f) => getAbsolutePath(f.template));
@@ -19,7 +21,7 @@ export default async (config: Config, configure: Iconfig, isDev: boolean) => {
     },
     attributes: {
       urlFilter: (_attribute: string, value: string) => {
-        return !identicalName(allFile, value);
+        return !allFile.find((f) => equalPaths(path.join(root, value), f));
       },
     },
   };

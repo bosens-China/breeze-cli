@@ -1,6 +1,6 @@
 import Config from 'webpack-chain';
 import { Iconfig, Iobj } from '../typings';
-import { getFileName, getAbsolutePath } from './utils';
+import { getFileName, getAbsolutePath, equalPaths } from './utils';
 import _ from 'lodash';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import setTemplate from './template';
@@ -10,8 +10,8 @@ import fs from 'fs-extra';
 import nunjucks from 'nunjucks';
 import cheerio from 'cheerio';
 import temporary from '../utils/temporary';
-import path from 'path';
 import { stats } from './index';
+import path from 'path';
 
 /**
  * 处理资源文件入口和html文件的入口
@@ -52,13 +52,15 @@ const setEntry = (config: Config, configure: Iconfig, isDev: boolean) => {
       config: configure,
       entryView,
     };
+
+    // 这里hot是必须添加的，生产环境下入口通过插件添加
     config.entry(hotName).add(hotPath).end();
     config.plugin(name).use(HtmlWebpackPlugin, [
       {
         minify: false,
         template: getAbsolutePath(template),
         filename,
-        chunks: [hotName, ...Object.keys(chunkEntry), ...Object.keys(chunkEntryCss)],
+        chunks: [hotName, ...(isDev ? Object.keys(chunkEntry) : []), ...Object.keys(chunkEntryCss)],
         // 写入一些私有属性，留作插件使用
         __option,
       },
@@ -115,22 +117,40 @@ const common = async (configure: Iconfig, isDev: boolean) => {
   config.resolve.alias.set('@', getAbsolutePath('src')).end();
   config.resolve.extensions.clear().add('.js').add('.json').add('.ts');
 
-  // 添加校验
-  config.module
-    .rule('lint')
-    .test(/\.(js|ts)$/)
-    .exclude.add(/node_modules/)
-    .end()
-    .include.add(getAbsolutePath('src'))
-    .end()
-    .use('check')
-    .loader(require.resolve(path.resolve(__dirname, '../loader/checkJS')))
-    .options(configure)
-    .end();
-
   if (!isDev) {
     config.stats(stats);
   }
+
+  config.module
+    .rule('js')
+    .test(/\.(js|ts)$/)
+    .exclude.add(/node_modules/)
+    .end()
+    .when(
+      isDev,
+      (c) => {
+        c.include.add(getAbsolutePath('src')).end().use('babel-loader').loader(require.resolve('babel-loader')).end();
+      },
+      (c) => {
+        // 获取所有hot文件
+        const all = Object.values(configure.pages).map((f) => {
+          return getAbsolutePath(f.entryHot);
+        });
+        c.include.add(((file: string) => {
+          return !all.find((f) => equalPaths(f, file));
+        }) as any);
+      },
+    )
+    .when(configure.lintOnSave && isDev, (c) => {
+      c.use('eslint-loader').loader(require.resolve('eslint-loader')).options({ catch: true }).end();
+    })
+    .when(!isDev, (c) => {
+      c.use('empty')
+        .loader(require.resolve(path.resolve(__dirname, '../loader/empty')))
+        .options(config)
+        .end();
+    });
+
   return config;
 };
 

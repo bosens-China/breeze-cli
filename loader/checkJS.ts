@@ -1,4 +1,4 @@
-// 生产环境下校验
+// 开发环境下校验
 import loaderUtils from 'loader-utils';
 import { Iconfig } from '../typings';
 import _ from 'lodash';

@@ -20,6 +20,12 @@ class Temporary {
     });
     await Promise.all(all);
   }
+
+  deleteSync() {
+    [...this.set.keys()].map((f) => {
+      return fs.removeSync(f);
+    });
+  }
 }
 
 export default new Temporary();
