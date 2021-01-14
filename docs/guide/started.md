@@ -8,7 +8,7 @@
 npm i -g @boses/breeze-cli
 ```
 
-## CLI服务
+## CLI 服务
 
 ### 创建项目
 
@@ -21,19 +21,19 @@ breeze created [name]
 ### 启动服务
 
 ```sh
-npm run serve
+breeze serve
 ```
 
 ### 构建项目
 
 ```sh
-npm run build
+breeze build
 ```
 
 ### 审查 webpack 配置
 
 ```sh
-inspect [modu]
+breeze inspect [modu]
 ```
 
 `modu`默认为`development`，可用的选项为

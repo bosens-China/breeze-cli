@@ -1,6 +1,6 @@
 # 流程图
 
-![framework](/framework.jpg)
+![framework](../image/framework.jpg)
 
 - 开发环境的构建，遵循 webpack 的配置，但是注意因为热重载是通过`websocket`来实现的，对于 IE9 之下的浏览器`object.defineproperty`也不支持，所以开发环境要调试选择高版本的浏览器，最终构建文件之后完成之后，在放置到 IE 特定的版本下调整
 

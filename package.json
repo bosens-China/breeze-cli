@@ -55,6 +55,7 @@
     "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2",
     "uuid": "^8.3.2",
+    "eslint": "^7.17.0",
     "prettier": "^2.2.1"
   },
   "engines": {
@@ -93,7 +94,6 @@
     "conventional-changelog-cli": "^2.1.1",
     "cz-conventional-changelog": "3.3.0",
     "cz-customizable": "^6.3.0",
-    "eslint": "^7.17.0",
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.7",
     "jest": "^26.6.3",
