@@ -15,7 +15,7 @@ export default (compilation: compilation.Compilation, then: Core) => {
   }
   if (build.formatJs) {
     for (const [name, value] of jsMap) {
-      const code = formatJs(value);
+      const code = formatJs(value, then.config.build.formatOptions);
       _.set(compilation.assets, name, {
         source: () => {
           return code;
@@ -29,7 +29,9 @@ export default (compilation: compilation.Compilation, then: Core) => {
   }
   const update = (arr: Array<string>, html: boolean) => {
     arr.forEach((item) => {
-      const value = html ? formatHtml(compilation.assets[item].source()) : formatCss(compilation.assets[item].source());
+      const value = html
+        ? formatHtml(compilation.assets[item].source(), then.config.build.formatOptions)
+        : formatCss(compilation.assets[item].source(), then.config.build.formatOptions);
       _.set(compilation.assets, item, {
         source: () => {
           return value;

@@ -1,5 +1,5 @@
 import Config from 'webpack-chain';
-const inlineLimit = 4096;
+
 import { Iconfig } from '../typings';
 import CopyPlugin from 'copy-webpack-plugin';
 import { getAbsolutePath, equalPaths } from './utils';
@@ -7,7 +7,7 @@ import { getAbsolutePath, equalPaths } from './utils';
 const genAssetSubPath = (dir: string) => {
   return `${dir}/[name].[ext]`;
 };
-const genUrlLoaderOptions = (dir: string) => {
+const genUrlLoaderOptions = (dir: string, inlineLimit: number | boolean) => {
   return {
     limit: inlineLimit,
     // use explicit fallback to avoid regression in url-loader>=1.1.0
@@ -30,7 +30,7 @@ export default (webpackConfig: Config, configure: Iconfig, isDev: boolean) => {
     .end()
     .use('url-loader')
     .loader(require.resolve('url-loader'))
-    .options(genUrlLoaderOptions('img'))
+    .options(genUrlLoaderOptions('img', configure.assets.inlineLimit))
     .end()
     .when(!isDev && configure.build.minifyImg, (c) => {
       c.use('image-webpack-loader').loader(require.resolve('image-webpack-loader')).end();
@@ -65,7 +65,7 @@ export default (webpackConfig: Config, configure: Iconfig, isDev: boolean) => {
     .end()
     .use('url-loader')
     .loader(require.resolve('url-loader'))
-    .options(genUrlLoaderOptions('media'));
+    .options(genUrlLoaderOptions('media', configure.assets.inlineLimit));
 
   webpackConfig.module
     .rule('fonts')
@@ -74,7 +74,7 @@ export default (webpackConfig: Config, configure: Iconfig, isDev: boolean) => {
     .end()
     .use('url-loader')
     .loader(require.resolve('url-loader'))
-    .options(genUrlLoaderOptions('fonts'));
+    .options(genUrlLoaderOptions('fonts', configure.assets.inlineLimit));
 
   // 复制静态资源
   const publicDir = getAbsolutePath('public');

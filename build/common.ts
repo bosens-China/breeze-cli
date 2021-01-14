@@ -10,8 +10,33 @@ import fs from 'fs-extra';
 import nunjucks from 'nunjucks';
 import cheerio from 'cheerio';
 import temporary from '../utils/temporary';
-import { stats } from './index';
 import path from 'path';
+import { Stats } from 'webpack';
+
+const stats: Stats.ToStringOptionsObject = {
+  warnings: false,
+  colors: true,
+  version: false,
+  usedExports: false,
+  timings: true,
+  publicPath: true,
+  reasons: false,
+  source: false,
+  providedExports: false,
+  performance: false,
+  modules: false,
+  chunks: false,
+  assets: true,
+  builtAt: true,
+  cached: true,
+  cachedAssets: true,
+  children: false,
+  chunkModules: false,
+  chunkOrigins: false,
+  depth: false,
+  hash: false,
+  entrypoints: false,
+};
 
 /**
  * 处理资源文件入口和html文件的入口

@@ -1,10 +1,19 @@
 {
   "name": "breeze-cli",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/cli/index.js",
+  "author": {
+    "name": "boses",
+    "email": "yangboses@gmail.com"
+  },
+  "description": "breeze 是一个简化开发，用于快速构建项目的工具",
+  "keywords": ["breeze", "webpack", "cli"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bosens-China/breeze-cli"
+  },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.12.10",
     "autoprefixer": "^10.2.1",
     "babel-loader": "^8.2.2",
     "cheerio": "^1.0.0-rc.5",
@@ -12,7 +21,6 @@
     "colors": "^1.4.0",
     "commander": "^6.2.1",
     "copy-webpack-plugin": "6.4.0",
-    "core-js": "^3.8.2",
     "css-loader": "^5.0.1",
     "cssnano": "^4.1.10",
     "download-git-repo": "^3.0.2",
@@ -27,7 +35,6 @@
     "image-webpack-loader": "^7.0.1",
     "inquirer": "^7.3.3",
     "ip": "^1.1.5",
-    "loader-utils": "^2.0.0",
     "lodash": "^4.17.20",
     "mini-css-extract-plugin": "^1.3.3",
     "njk-html-loader": "^1.2.0",
@@ -43,13 +50,23 @@
     "typescript": "^4.1.3",
     "uglify-js": "^3.12.4",
     "url-loader": "^4.1.1",
-    "uuid": "^8.3.2",
     "webpack": "^4.41.6",
     "webpack-chain": "^6.5.1",
     "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "uuid": "^8.3.2",
+    "prettier": "^2.2.1"
   },
+  "engines": {
+    "node": ">=10.6.0"
+  },
+  "files": [
+    "lib",
+    "*.md"
+  ],
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "core-js": "^3.8.2",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
     "@commitlint/config-conventional": "^11.0.0",
@@ -80,14 +97,18 @@
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.7",
     "jest": "^26.6.3",
-    "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
-    "tslib": "^2.0.3"
+    "tslib": "^2.0.3",
+    "vuepress": "^1.8.0"
   },
   "scripts": {
     "test": "jest",
     "build-watch": "tsc -w",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "build": "rimraf dist/* && tsc",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "docs:dev": "vuepress dev docs",
+    "release-docs": "bash deploy.sh",
+    "docs:build": "vuepress build docs"
   },
   "bin": {
     "breeze": "dist/cli/index.js"

@@ -10,6 +10,7 @@ import deleteAssets from './delete.assets';
 import minifyJs from './minify';
 import format from './format';
 import inline from './inline';
+import rename from './rename';
 
 class Core {
   public config: Iconfig;
@@ -49,6 +50,7 @@ class Core {
           // 添加环境变量
           await setEnv(data, this.config, this.isDev);
           await inline(data);
+          await rename(data, this);
         } catch (e) {
           compilation.errors.push(e);
         }

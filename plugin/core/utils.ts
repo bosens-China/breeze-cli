@@ -1,4 +1,3 @@
-import * as format from '../../utils/format';
 import cheerio from 'cheerio';
 import { root, Idata } from './type';
 import UglifyJS from 'uglify-js';
@@ -6,6 +5,7 @@ import postcss from 'postcss';
 import cssnano from 'cssnano';
 import path from 'path';
 import { isFileExists } from '../../utils/fs';
+export { js as formatJs, css as formatCss, html as formatHtml } from '../../utils/format';
 
 export const isCssFile = (file: string) => {
   return file.includes('__css_');
@@ -13,15 +13,17 @@ export const isCssFile = (file: string) => {
 export const isHotFile = (file: string) => {
   return file.includes('__hot_');
 };
-export const formatCss = (code: string) => {
-  return format.css(code);
-};
-export const formatJs = (code: string) => {
-  return format.js(code);
-};
-export const formatHtml = (code: string) => {
-  return format.html(code);
-};
+
+// import * as format from '../../utils/format';
+// export const formatCss = (code: string) => {
+//   return format.css(code);
+// };
+// export const formatJs = (code: string) => {
+//   return format.js(code);
+// };
+// export const formatHtml = (code: string) => {
+//   return format.html(code);
+// };
 
 const catchMap: WeakMap<Idata, root> = new WeakMap();
 

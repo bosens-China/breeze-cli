@@ -4,12 +4,18 @@ import { Iconfig } from '../typings';
 import fs from 'fs-extra';
 import shell from 'shelljs';
 import path from 'path';
+import _ from 'lodash';
 
 // 返回用户的配置文件，如果没有返回{}
-export const getConfigFile = async (): Promise<Iconfig> => {
+export const getConfigFile = async (isDev: boolean): Promise<Iconfig> => {
   const configPath = getAbsolutePath('breeze.config.js');
   if (await isFileExists(configPath)) {
-    return import(configPath).then(({ default: obj }) => obj);
+    return import(configPath).then(({ default: obj }) => {
+      if (_.isFunction(obj)) {
+        return obj(isDev);
+      }
+      return obj || {};
+    });
   }
   return {} as Iconfig;
 };

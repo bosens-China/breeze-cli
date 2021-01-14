@@ -28,10 +28,16 @@ export interface Ibuild {
   formatJs: boolean;
   formatCss: boolean;
   formatHtml: boolean;
+  formatOptions?: Iobj;
+}
+
+export interface Iassets {
+  inlineLimit: number | boolean;
 }
 export interface Iconfig {
   publicPath: string;
   outputDir: string;
+  rename: boolean;
   pages: Ipages;
   css: Iobj;
   devServer: Iobj;
@@ -40,4 +46,5 @@ export interface Iconfig {
   build: Ibuild;
   configureWebpack: Iobj | ((config: webpack.Configuration) => void);
   lintOnSave: boolean;
+  assets: Iassets;
 }

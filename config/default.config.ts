@@ -37,6 +37,7 @@ const config = (isDev = false): Iconfig => {
     var: {
       BASE_URL: isDev ? '/' : '',
     },
+    rename: false,
     build: {
       minifyCss: false,
       minifyImg: false,
@@ -48,6 +49,9 @@ const config = (isDev = false): Iconfig => {
     },
     configureWebpack: {},
     lintOnSave: true,
+    assets: {
+      inlineLimit: 3 * 1024,
+    },
   };
 };
 

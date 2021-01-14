@@ -6,36 +6,11 @@ import prod from './prod';
 import webpackMerge from 'webpack-merge';
 import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 import webpackDevServer from 'webpack-dev-server';
-import webpack, { Stats } from 'webpack';
+import webpack from 'webpack';
 import colors from 'colors';
 import temporary from '../utils/temporary';
 import ip from 'ip';
 import { getSequentialPort } from '../utils/serve';
-
-const stats: Stats.ToStringOptionsObject = {
-  warnings: false,
-  colors: true,
-  version: false,
-  usedExports: false,
-  timings: true,
-  publicPath: true,
-  reasons: false,
-  source: false,
-  providedExports: false,
-  performance: false,
-  modules: false,
-  chunks: false,
-  assets: true,
-  builtAt: true,
-  cached: true,
-  cachedAssets: true,
-  children: false,
-  chunkModules: false,
-  chunkOrigins: false,
-  depth: false,
-  hash: false,
-  entrypoints: false,
-};
 
 /**
  * 设置环境变量，虽然本身插件不适用，但是为了方便拓展一些其他场景
@@ -46,26 +21,8 @@ const setModeVar = (isDev: boolean) => {
   _.set(process.env, 'NODE_ENV', isDev ? 'development' : 'production');
 };
 
-/**
- * 设置环境变量，之后根据模式启动
- *
- * @param {Partial<Iconfig>} [config]
- * @param {boolean} [isDev=false]
- */
 const App = async (config?: Partial<Iconfig>, isDev = true) => {
-  setModeVar(isDev);
-  const userConfig = merge(config, isDev);
-  const webpackConfig = isDev ? await dev(userConfig) : await prod(userConfig);
-  const { devServer } = userConfig;
-  // 根据配置文件，修改webpack实例
-  const wc = webpackMerge(
-    webpackConfig.toConfig(),
-    { devServer },
-    _.isObjectLike(userConfig.configureWebpack) ? userConfig.configureWebpack : {},
-  );
-  if (_.isFunction(userConfig.configureWebpack)) {
-    userConfig.configureWebpack(wc);
-  }
+  const wc = await getConfig(config, isDev);
   if (isDev) {
     await server(wc);
     return;
@@ -122,9 +79,32 @@ async function build(config: webpack.Configuration) {
       return;
     }
 
-    console.log(s.toString(stats));
+    console.log(s.toString(config.stats));
   });
 }
 
-export { stats };
-export default App;
+/**
+ * 获取webpack的配置信息
+ *
+ * @param {Partial<Iconfig>} [config]
+ * @param {boolean} [isDev=true]
+ * @return {*}
+ */
+async function getConfig(config?: Partial<Iconfig>, isDev = true) {
+  setModeVar(isDev);
+  const userConfig = merge(config, isDev);
+  const webpackConfig = isDev ? await dev(userConfig) : await prod(userConfig);
+  const { devServer } = userConfig;
+  // 根据配置文件，修改webpack实例
+  const wc = webpackMerge(
+    webpackConfig.toConfig(),
+    { devServer },
+    _.isObjectLike(userConfig.configureWebpack) ? userConfig.configureWebpack : {},
+  );
+  if (_.isFunction(userConfig.configureWebpack)) {
+    userConfig.configureWebpack(wc);
+  }
+  return wc;
+}
+
+export { App, getConfig };
