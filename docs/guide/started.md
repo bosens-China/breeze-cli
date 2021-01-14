@@ -5,7 +5,7 @@
 ## 安装
 
 ```sh
-npm i -g @boese/breeze-cli
+npm i -g @boses/breeze-cli
 ```
 
 ## CLI服务

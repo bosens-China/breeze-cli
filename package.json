@@ -1,5 +1,5 @@
 {
-  "name": "breeze-cli",
+  "name": "@boses/breeze-cli",
   "version": "1.0.0",
   "main": "dist/cli/index.js",
   "author": {
