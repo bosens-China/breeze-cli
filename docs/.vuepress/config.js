@@ -1,6 +1,8 @@
 module.exports = {
   title: 'Hello Breeze',
   description: '简化流程的开发工具',
+  base: process.env.NODE_ENV === 'production' ? 'breeze-cli' : '/',
+  head: [['link', { rel: 'icon', href: '/favicon.png' }]],
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/introduce' },

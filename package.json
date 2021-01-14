@@ -61,7 +61,7 @@
     "node": ">=10.6.0"
   },
   "files": [
-    "lib",
+    "dist",
     "*.md"
   ],
   "devDependencies": {

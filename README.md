@@ -16,7 +16,7 @@ breeze 的含义是微风，它主要用于混合式开发和小型项目开发�
 
 ## Documentation
 
-可以在 xx 获取文档，文档资料正在完善中，欢迎 pr
+可以在 [breeze-cli](https://bosens-china.github.io/breeze-cli/) 获取文档，文档资料正在完善中，欢迎 pr
 
 ## 其他
 
