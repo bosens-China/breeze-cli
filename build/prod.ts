@@ -3,6 +3,7 @@ import common from './common';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import cssnano from 'cssnano';
+import Loading from '../plugin/loading';
 
 const build = async (config: Iconfig) => {
   const webpackConfig = await common(config, false);
@@ -23,6 +24,7 @@ const build = async (config: Iconfig) => {
       },
     ]);
   }
+  webpackConfig.plugin('loading').use(Loading);
   return webpackConfig;
 };
 

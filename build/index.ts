@@ -11,6 +11,7 @@ import colors from 'colors';
 import temporary from '../utils/temporary';
 import ip from 'ip';
 import { getSequentialPort } from '../utils/serve';
+import { yarnIsExistence } from '../cli/utils';
 
 /**
  * 设置环境变量，虽然本身插件不适用，但是为了方便拓展一些其他场景
@@ -48,7 +49,7 @@ async function server(config: webpack.Configuration) {
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
         messages: [messages],
-        notes: [`运行: ${colors.green('npm run build')} 构建应用\n`],
+        notes: [`运行: ${colors.green(`${yarnIsExistence} ? 'yarn' :'npm' run build`)} 构建应用\n`],
       },
     }),
   );

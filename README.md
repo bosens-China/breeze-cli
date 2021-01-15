@@ -14,6 +14,7 @@ breeze 的含义是微风，它主要用于混合式开发和小型项目开发�
 - 开发环境热重载
 - 内联 style 和 script polyfill 处理
 
+![演示](/public/demo.gif)
 ## Documentation
 
 可以在 [breeze-cli](https://bosens-china.github.io/breeze-cli/) 获取文档，文档资料正在完善中，欢迎 pr
