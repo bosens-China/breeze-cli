@@ -56,6 +56,8 @@ export default async (config: Config, configure: Iconfig, isDev: boolean) => {
     .loader(require.resolve('njk-html-loader'))
     .options({
       data: configure.var,
+      // 添加目录基准值
+      root: _.values(configure.pages).map((f) => path.dirname(getAbsolutePath(f.entryView))),
     })
     .end();
 

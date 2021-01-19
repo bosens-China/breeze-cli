@@ -105,7 +105,7 @@ async function created(source: string) {
   await pullTemplate(dir, cover);
   // 更改一下名称为创建的名称
   const jsonFile = await fs.readJson(path.join(dir, './package.json'));
-  await fs.writeJson(path.join(dir, './package.json'), { ...jsonFile, name: source });
+  await fs.writeJson(path.join(dir, './package.json'), { ...jsonFile, name: source }, { spaces: 2 });
 
   await fs.remove(path.join(dir, yarnIsExistence() ? 'package-lock.json' : 'yarn.lock'));
 }
@@ -157,3 +157,5 @@ async function build(isDev: boolean) {
     exit(e);
   });
 }
+
+export { App, getConfig };

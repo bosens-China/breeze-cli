@@ -49,7 +49,7 @@ async function server(config: webpack.Configuration) {
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
         messages: [messages],
-        notes: [`运行: ${colors.green(`${yarnIsExistence} ? 'yarn' :'npm' run build`)} 构建应用\n`],
+        notes: [`运行: ${colors.green(`${yarnIsExistence() ? 'yarn' : 'npm'} run build`)} 构建应用\n`],
       },
     }),
   );
