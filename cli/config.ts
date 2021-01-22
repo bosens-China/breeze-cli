@@ -1,9 +1,9 @@
 import download from 'download-git-repo';
-export const template: { [k: string]: any } = {
-  ts模板: 'https://github.com:bosens-China/breeze-template#typescript',
-  js模板: 'https://github.com:bosens-China/breeze-template#main',
-};
 
+export enum template {
+  ts模板 = 'https://github.com:bosens-China/breeze-template#typescript',
+  js模板 = 'https://github.com:bosens-China/breeze-template#main',
+}
 export const initTemplateKey = 'ts模板';
 
 /**

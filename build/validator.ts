@@ -1,5 +1,5 @@
 /*
-  校验用户输入的格式是否有误，只对pages和env做了严格的校验
+  校验用户输入的格式是否有误，只对pages做了严格的校验
 */
 
 import Schema, { Rules } from 'async-validator';
@@ -23,7 +23,9 @@ const chechPages = (value: any) => {
     entryCss: {
       message: 'validator 类型为 object | Function',
       validator(_rule, value) {
-        return value ? _.isString(value) || (_.isArray(value) && value.every((f) => _.isString(f))) : true;
+        return value !== undefined
+          ? _.isString(value) || (_.isArray(value) && value.every((f) => _.isString(f)))
+          : true;
       },
     },
     template: {
@@ -80,12 +82,9 @@ const check = async (config?: Partial<Iconfig>) => {
       type: 'object',
     },
     env: {
-      message: 'env 类型为 object',
-      type: 'object',
-      fields: {
-        all: { type: 'object' },
-        development: { type: 'object' },
-        production: { type: 'object' },
+      message: 'env 类型为 object 或者为 boolean',
+      validator(_rule, value) {
+        return value !== undefined ? value === false || _.isObjectLike(value) : true;
       },
     },
     var: {
@@ -99,7 +98,7 @@ const check = async (config?: Partial<Iconfig>) => {
     configureWebpack: {
       message: 'configureWebpack 类型为object | Function',
       validator(_rule, value) {
-        return value ? _.isFunction(value) || _.isObjectLike(value) : true;
+        return value !== undefined ? _.isFunction(value) || _.isObjectLike(value) : true;
       },
     },
     lintOnSave: {

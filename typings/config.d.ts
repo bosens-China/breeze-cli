@@ -1,3 +1,4 @@
+import { Options } from 'html-webpack-plugin';
 import webpack from 'webpack';
 
 export interface Iobj<T = any> {
@@ -11,6 +12,7 @@ export interface Ipages {
     template: string;
     filename: string;
     entryView: string;
+    options?: Options;
   };
 }
 
@@ -41,7 +43,7 @@ export interface Iconfig {
   pages: Ipages;
   css: Iobj;
   devServer: Iobj;
-  env: Ienv;
+  env: Ienv | boolean;
   var: Iobj;
   build: Ibuild;
   configureWebpack: Iobj | ((config: webpack.Configuration) => void);

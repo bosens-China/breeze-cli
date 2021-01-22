@@ -27,13 +27,7 @@ const config = (isDev = false): Iconfig => {
         errors: true,
       },
     },
-    env: {
-      all: {
-        NODE_ENV: isDev ? 'development' : 'production',
-      },
-      development: {},
-      production: {},
-    },
+    env: false,
     var: {
       BASE_URL: isDev ? '/' : '',
     },

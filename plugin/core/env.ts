@@ -1,12 +1,24 @@
 import { Iconfig } from '../../typings';
+import { Idata } from './type';
+import { get$ } from './utils';
+import _ from 'lodash';
 
 const identification = '__replate__';
 const envStr = `window.process = {env: ${identification}}`;
 
-import { Idata } from './type';
-import { get$ } from './utils';
-
 export default (data: Idata, config: Iconfig, isDev: boolean) => {
+  if (_.isBoolean(config.env)) {
+    if (config.env === false) {
+      return;
+    }
+    config.env = {
+      all: {
+        NODE_ENV: isDev ? 'development' : 'production',
+      },
+      development: {},
+      production: {},
+    };
+  }
   const $ = get$(data);
   const env = {
     ...config.env.all,

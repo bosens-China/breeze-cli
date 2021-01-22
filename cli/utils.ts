@@ -2,6 +2,7 @@ import { getAbsolutePath } from '../build/utils';
 import { isFileExists } from '../utils/fs';
 import { Iconfig } from '../typings';
 import { spawn, SpawnOptions } from 'child_process';
+import colors from 'colors';
 // import fs from 'fs-extra';
 // import path from 'path';
 import shell from 'shelljs';
@@ -51,4 +52,12 @@ export function install(shellStr: string, options?: SpawnOptions) {
       return reject(err);
     });
   });
+}
+
+// 根据一般规范，退出的时候需要返回1，成功返回0
+export function exit(message?: string | Error) {
+  if (message) {
+    console.log(colors.red(message instanceof Error ? message.message : message));
+  }
+  process.exit(1);
 }

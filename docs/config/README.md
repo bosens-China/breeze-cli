@@ -89,28 +89,47 @@ module.exports = {
 
 用于配置 breeze 的入口信息，除了`entry`、`entryCss`其他选项是必填的
 
-- entry：`Array<string> | string`
+#### entry
 
-  入口文件的信息，可以省略 js 或者 ts 的后缀，不过为了性能请始终填写完整后缀
+type：`Array<string> | string`
 
-- entryView：`string`
+入口文件的信息，可以省略 js 或者 ts 的后缀，不过为了性能请始终填写完整后缀
 
-  `view`入口文件，注意不可省略
+#### entryView
 
-- entryHot：`string`
+type：`string`
 
-  热重载文件文件，开发环境下会通过此文件来完成热重载，生产环境下会被清除，如果你想修改请参考模板文件的写法
+`view`入口文件，注意不可省略
 
-- entryCss：`Array<string> | string`
+#### entryHot
 
-  配置 css 文件的路径，注意不可以通过`import`来引用 css，而是始终使用此配置项来引用 css
+type：`string`
 
-- template：`string`
+热重载文件文件，开发环境下会通过此文件来完成热重载，生产环境下会被清除，如果你想修改请参考模板文件的写法
 
-  入口模板文件
+#### entryCss
 
-- filename：`string`
-  输出模板文件的名称
+type：`Array<string> | string`
+
+配置 css 文件的路径，注意不可以通过`import`来引用 css，而是始终使用此配置项来引用 css
+
+#### template
+
+type：`string`
+
+入口模板文件
+
+#### filename
+
+type：`string`
+
+输出模板文件的名称
+
+#### options
+
+type: `object`
+
+详细内容请参考[html-webpack-plugin]选项(https://github.com/jantimon/html-webpack-plugin)
 
 ### css
 
@@ -146,8 +165,12 @@ module.exports = {
 
 ### env
 
-- Type: `Object`
-- Default:
+- Type: `Object | boolean`
+- Default: `false`
+
+环境变量，如果为`false`则不启用，在开发或者生产环境下，可以通过环境变量进行条件的切换，例如常见的接口请求在开发环境下会通过`proxy`代理，而在生产环境下不存在跨域所以可以直接配置服务器地址。
+
+如果为`true`，则默认为
 
 ```js
 module.exports = {
@@ -163,8 +186,6 @@ module.exports = {
   },
 };
 ```
-
-环境变量，在开发或者生产环境下，可以通过环境变量进行条件的切换，例如常见的接口请求在开发环境下会通过`proxy`代理，而在生产环境下不存在跨域所以可以直接配置服务器地址。
 
 ### var
 
