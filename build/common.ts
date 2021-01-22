@@ -47,7 +47,7 @@ const stats: Stats.ToStringOptionsObject = {
 const setEntry = (config: Config, configure: Iconfig, isDev: boolean) => {
   const { pages } = configure;
   for (const [name, pageValue] of Object.entries(pages)) {
-    const { entry, entryCss, entryHot, template, filename, entryView } = pageValue;
+    const { entry, entryCss = [], entryHot, template, filename, entryView } = pageValue;
     const entryArr = _.isArray(entry) ? entry : [entry];
     const entryCssArr = _.isArray(entryCss) ? entryCss : [entryCss];
     const chunkEntry: Iobj<string> = {};

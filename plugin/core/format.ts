@@ -29,9 +29,11 @@ export default (compilation: compilation.Compilation, then: Core) => {
   }
   const update = (arr: Array<string>, html: boolean) => {
     arr.forEach((item) => {
+      let content = compilation.assets[item].source();
+      content = _.isString(content) ? content : String(content);
       const value = html
-        ? formatHtml(compilation.assets[item].source(), then.config.build.formatOptions)
-        : formatCss(compilation.assets[item].source(), then.config.build.formatOptions);
+        ? formatHtml(content, then.config.build.formatOptions)
+        : formatCss(content, then.config.build.formatOptions);
       _.set(compilation.assets, item, {
         source: () => {
           return value;

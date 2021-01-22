@@ -28,7 +28,6 @@ class Core {
     const extensions = compiler.options.resolve?.extensions || [];
     this.extensions = extensions;
     compiler.hooks.compilation.tap('core-compilation', (compilation) => {
-      // debugger;
       // html插件，在emit之前触发，当前有chunk块的js资源
       HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync(
         'core-alterAssetTagGroups',

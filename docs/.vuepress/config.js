@@ -48,7 +48,7 @@ module.exports = {
               path: 'inline',
             },
             {
-              title: '使用建议',
+              title: 'Q&A',
               path: 'careful',
             },
           ],

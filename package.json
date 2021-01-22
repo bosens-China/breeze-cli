@@ -1,19 +1,24 @@
 {
   "name": "@boses/breeze-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/cli/index.js",
   "author": {
     "name": "boses",
     "email": "yangboses@gmail.com"
   },
   "description": "breeze 是一个简化开发，用于快速构建项目的工具",
-  "keywords": ["breeze", "webpack", "cli"],
+  "keywords": [
+    "breeze",
+    "webpack",
+    "cli"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bosens-China/breeze-cli"
   },
   "license": "MIT",
   "dependencies": {
+    "async-validator": "3.5.0",
     "autoprefixer": "^10.2.1",
     "babel-loader": "^8.2.2",
     "cheerio": "^1.0.0-rc.5",
@@ -24,6 +29,7 @@
     "css-loader": "^5.0.1",
     "cssnano": "^4.1.10",
     "download-git-repo": "^3.0.2",
+    "eslint": "^7.17.0",
     "eslint-loader": "3.0.0",
     "file-loader": "^6.2.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
@@ -43,6 +49,7 @@
     "ora": "^5.2.0",
     "postcss": "^8.2.4",
     "postcss-loader": "^4.1.0",
+    "prettier": "^2.2.1",
     "sass": "^1.32.0",
     "sass-loader": "^10.1.0",
     "shelljs": "^0.8.4",
@@ -50,13 +57,11 @@
     "typescript": "^4.1.3",
     "uglify-js": "^3.12.4",
     "url-loader": "^4.1.1",
+    "uuid": "^8.3.2",
     "webpack": "^4.41.6",
     "webpack-chain": "^6.5.1",
     "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2",
-    "uuid": "^8.3.2",
-    "eslint": "^7.17.0",
-    "prettier": "^2.2.1"
+    "webpack-merge": "^4.2.2"
   },
   "engines": {
     "node": ">=10.6.0"
@@ -67,7 +72,6 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "core-js": "^3.8.2",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
     "@commitlint/config-conventional": "^11.0.0",
@@ -92,6 +96,7 @@
     "commitizen": "^4.2.2",
     "commitlint": "^11.0.0",
     "conventional-changelog-cli": "^2.1.1",
+    "core-js": "^3.8.2",
     "cz-conventional-changelog": "3.3.0",
     "cz-customizable": "^6.3.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -103,7 +108,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build-watch": "tsc -w",
+    "build-watch": "npm run build && tsc -w",
     "build": "rimraf dist/* && tsc",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "docs:dev": "vuepress dev docs",

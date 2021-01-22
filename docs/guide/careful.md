@@ -1,4 +1,4 @@
-# 使用建议
+# Q&A
 
 ## 尽量不要修改 wbpack 配置
 
@@ -22,3 +22,27 @@ module.exports = {
 ## 入口文件不要包含 import 等导入语法
 
 开发环境会通过 webpack 的依赖收集资源可以正常加载，但是生产环境下会使用 typescript 的编译所以不会处理这些资源
+
+## 多页面如何访问
+
+默认访问`index.html`的文件不需要显示添加`index.html`；
+例如服务在`http://localhost:8080/`启动，完整的路径应该是`http://localhost:8080/index.html`，但是因为`index.html`所以直接`http://localhost:8080/`也是可以访问的，但是如果存在多页面
+，你应该根据`breeze.config.js`下的`pages`的`filename`属性来进行访问，例如：
+
+breeze.config.js
+
+```js
+module.exports = {
+  pages: {
+    App: {
+      entry: ['src/app'],
+      entryView: 'src/app.njk',
+      entryHot: 'src/hot-app',
+      template: 'public/app.html',
+      filename: 'app.html',
+    },
+  },
+};
+```
+
+访问的路径就是`http://localhost:8080/app.html`

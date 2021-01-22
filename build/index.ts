@@ -12,6 +12,7 @@ import temporary from '../utils/temporary';
 import ip from 'ip';
 import { getSequentialPort } from '../utils/serve';
 import { yarnIsExistence } from '../cli/utils';
+import validator from './validator';
 
 /**
  * 设置环境变量，虽然本身插件不适用，但是为了方便拓展一些其他场景
@@ -92,6 +93,8 @@ async function build(config: webpack.Configuration) {
  * @return {*}
  */
 async function getConfig(config?: Partial<Iconfig>, isDev = true) {
+  // 校验传递过来的配置文件，是否包含错误
+  await validator(config);
   setModeVar(isDev);
   const userConfig = merge(config, isDev);
   const webpackConfig = isDev ? await dev(userConfig) : await prod(userConfig);
@@ -107,5 +110,14 @@ async function getConfig(config?: Partial<Iconfig>, isDev = true) {
   }
   return wc;
 }
-
+// 捕捉promise错误，主要是webpakc的错误
+process.on('unhandledRejection', (err) => {
+  temporary.deleteSync();
+  throw err;
+});
+// 监听系统消息
+process.on('SIGTERM', function () {
+  temporary.deleteSync();
+  process.exit(0);
+});
 export { App, getConfig };

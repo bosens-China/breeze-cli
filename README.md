@@ -2,7 +2,7 @@
 
 breeze 的含义是微风，它主要用于混合式开发和小型项目开发，具有以下功能
 
-![mlt](https://img.shields.io/badge/License-MIT-brightgreen) ![mlt](https://img.shields.io/badge/npm-1.0.0-brightgreen)
+![mlt](https://img.shields.io/badge/License-MIT-brightgreen) ![mlt](https://img.shields.io/badge/npm-1.0.4-brightgreen)
 
 - eslint 检查
 - typescript 支持
