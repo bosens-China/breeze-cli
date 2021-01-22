@@ -9,6 +9,7 @@ nrm use npm
 # 添加git
 git add .
 npx cz
+git push
 # 发布
 npm publish --access=public
 # 将源设置回来
