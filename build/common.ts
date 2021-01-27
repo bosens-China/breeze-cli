@@ -104,7 +104,7 @@ async function setTemporaryTemplate(configure: Iconfig, entryTemplate: string, e
   const c = compiled(varAll);
   // 加载view内容
   const con = await fs.readFile(entryView, 'utf-8');
-  const view = nunjucks.configure(path.dirname(getAbsolutePath(entryView)));
+  const view = nunjucks.configure([getAbsolutePath('src/view'), getAbsolutePath('src'), getAbsolutePath('')]);
   const contentView = view.renderString(con, varAll);
   const $ = cheerio.load(c, { decodeEntities: false });
   $('#app').html(contentView);
