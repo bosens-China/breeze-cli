@@ -33,13 +33,6 @@ class Temporary {
     return str;
   }
 
-  public remove() {
-    return Promise.all(
-      this.fileArr.map((item) => {
-        return fs.remove(item);
-      }),
-    );
-  }
 
   public removeSync() {
     this.fileArr.forEach((item) => {
