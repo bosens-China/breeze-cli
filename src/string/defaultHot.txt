@@ -1,0 +1,14 @@
+import morphdom from 'morphdom';
+import App from './App.njk';
+
+const content = document.body.querySelector('#app');
+content.innerHTML = App;
+
+// 热重载
+if (module.hot) {
+  module.hot.accept('./App.njk', () => {
+    const clone = content.cloneNode();
+    clone.innerHTML = App;
+    morphdom(content, clone);
+  });
+}
